@@ -12,7 +12,7 @@ options = {
 }
 
 setup(
-    name='watchmaker',
+    name='watchme_main',
     options=options,
     version='0.0.1',
     description='',

@@ -2,7 +2,7 @@ using System;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
 
-namespace ConsoleApp1
+namespace WatchmeBack
 {
     class Program
     {
@@ -28,6 +28,7 @@ namespace ConsoleApp1
                     UseShellExecute = false,
                     RedirectStandardInput = true,
                     RedirectStandardOutput = true,
+                    RedirectStandardError = true,
                     CreateNoWindow = true
                 }
             };
