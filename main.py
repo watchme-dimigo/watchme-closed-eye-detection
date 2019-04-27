@@ -11,6 +11,7 @@ def randoutput():
         ]
     })
 
-while 1:
+# while 1:
+for i in range(5):
     print(randoutput())
     sleep(0.2 +  random.uniform(-0.1, 0.1))
