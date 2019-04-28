@@ -1,2 +1,3 @@
+# for build
 cx_Freeze == 5.1.1
 idna == 2.8
