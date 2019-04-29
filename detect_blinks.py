@@ -8,6 +8,7 @@ import time
 import dlib
 import cv2
 from utils import draw_dlib_rect
+import random
 
 
 def eye_aspect_ratio(eye):
@@ -28,7 +29,7 @@ def eye_aspect_ratio(eye):
 
 
 def main():
-    EYE_AR_THRESH = 0.27
+    EYE_AR_THRESH = 0.15
     EYE_AR_CONSEC_FRAMES = 2
 
     # initialize the frame counters and the total number of blinks
@@ -125,24 +126,25 @@ def main():
             # threshold, and if so, increment the blink frame counter
             if ear < EYE_AR_THRESH:
                 COUNTER += 1
+                print(f'[*{ear}] eye closed')
 
             # otherwise, the eye aspect ratio is not below the blink
             # threshold
-            else:
-                # if the eyes were closed for a sufficient number of
-                # then increment the total number of blinks
-                if COUNTER >= EYE_AR_CONSEC_FRAMES:
-                    TOTAL += 1
+            # else:
+            #     # if the eyes were closed for a sufficient number of
+            #     # then increment the total number of blinks
+            #     if COUNTER >= EYE_AR_CONSEC_FRAMES:
+            #         TOTAL += 1
 
-                # reset the eye frame counter
-                COUNTER = 0
+            #     # reset the eye frame counter
+            #     COUNTER = 0
 
-            # draw the total number of blinks on the frame along with
-            # the computed eye aspect ratio for the frame
-            cv2.putText(frame, "Blinks: {}".format(TOTAL), (10, 30),
-                        cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
-            cv2.putText(frame, "EAR: {:.2f}".format(ear), (300, 30),
-                        cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
+            # # draw the total number of blinks on the frame along with
+            # # the computed eye aspect ratio for the frame
+            # cv2.putText(frame, "Blinks: {}".format(TOTAL), (10, 30),
+            #             cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
+            # cv2.putText(frame, "EAR: {:.2f}".format(ear), (300, 30),
+            #             cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
 
         # show the frame
         cv2.imshow("Frame", frame)
