@@ -5,19 +5,19 @@ import cv2
 from imutils.video import VideoStream
 import imutils
 import dlib
-from core.eye_closed import eye_closed
+from core.eye_closed import face_utils, eye_closed, get_shape, get_ear
 
 def main():
     EYE_AR_THRESH = 0.15
 
-    print("[INFO] loading facial landmark predictor...")
+    # print("[INFO] loading facial landmark predictor...")
     detector = dlib.get_frontal_face_detector()
     predictor = dlib.shape_predictor('shape_predictor_68_face_landmarks.dat')
 
     (lStart, lEnd) = face_utils.FACIAL_LANDMARKS_IDXS["left_eye"]
     (rStart, rEnd) = face_utils.FACIAL_LANDMARKS_IDXS["right_eye"]
 
-    print("[INFO] starting video stream thread...")
+    # print("[INFO] starting video stream thread...")
 
     vs = VideoStream(src=0, resolution=(1280, 960)).start()
     fileStream = False
@@ -61,7 +61,12 @@ def main():
             print(json.dumps({
                 'closed': eye_closed(leftEAR, rightEAR, EYE_AR_THRESH)
             }))
-            sys.stdout.flush()
+        else:
+            print(json.dumps({
+                'closed': -1
+            }))
+            
+        sys.stdout.flush()        
 
     vs.stop()
 

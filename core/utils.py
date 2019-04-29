@@ -1,6 +1,6 @@
 import cv2
 
-# frame draws: 실제 촬영된 영상 확인 시 사용함
+# frame draws: 실제 촬영된 영상 확인 시 테스트용으로 사용함; 실제 프로덕션 코드에는 없음
 def _draw_rect(frame, rect):
     (x, y, w, h) = rect
     cv2.rectangle(frame, (x, y), (x + w, y + h), (255, 0, 0), 2)        
