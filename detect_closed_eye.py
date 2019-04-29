@@ -1,14 +1,13 @@
+import sys
+import time
+import json
+import cv2
 from scipy.spatial import distance as dist
-from imutils.video import FileVideoStream
 from imutils.video import VideoStream
 from imutils import face_utils
-import argparse
 import imutils
-import time
 import dlib
-import cv2
 from utils import draw_dlib_rect
-import random
 
 
 def eye_aspect_ratio(eye):
@@ -30,11 +29,6 @@ def eye_aspect_ratio(eye):
 
 def main():
     EYE_AR_THRESH = 0.15
-    EYE_AR_CONSEC_FRAMES = 2
-
-    # initialize the frame counters and the total number of blinks
-    COUNTER = 0
-    TOTAL = 0
 
     # initialize dlib's face detector (HOG-based) and then create
     # the facial landmark predictor
@@ -54,8 +48,8 @@ def main():
     vs = VideoStream(src=0, resolution=(1280, 960)).start()
     fileStream = False
 
-    cv2.namedWindow('Frame', cv2.WINDOW_NORMAL)
-    cv2.resizeWindow('Frame', 1000, 800)
+    # cv2.namedWindow('Frame', cv2.WINDOW_NORMAL)
+    # cv2.resizeWindow('Frame', 1000, 800)
 
     time.sleep(1.0)
 
@@ -124,38 +118,32 @@ def main():
 
             # check to see if the eye aspect ratio is below the blink
             # threshold, and if so, increment the blink frame counter
-            if ear < EYE_AR_THRESH:
-                COUNTER += 1
-                print(f'[*{ear}] eye closed')
 
-            # otherwise, the eye aspect ratio is not below the blink
-            # threshold
+            # if ear < EYE_AR_THRESH:
+            #     COUNTER += 1
+            # print(f'[*{ear}] eye closed')
+            # cv2.putText(frame, "eye closed: {}".format(ear), (10, 30),
+            #             cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
+
             # else:
-            #     # if the eyes were closed for a sufficient number of
-            #     # then increment the total number of blinks
-            #     if COUNTER >= EYE_AR_CONSEC_FRAMES:
-            #         TOTAL += 1
+            #     cv2.putText(frame, "eye opened: {}".format(ear), (10, 30),
+            #                 cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 0), 2)
 
-            #     # reset the eye frame counter
-            #     COUNTER = 0
-
-            # # draw the total number of blinks on the frame along with
-            # # the computed eye aspect ratio for the frame
-            # cv2.putText(frame, "Blinks: {}".format(TOTAL), (10, 30),
-            #             cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
-            # cv2.putText(frame, "EAR: {:.2f}".format(ear), (300, 30),
-            #             cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
+            print(json.dumps({
+                'closed': int(ear < EYE_AR_THRESH)
+            }))
+            sys.stdout.flush()
 
         # show the frame
-        cv2.imshow("Frame", frame)
-        key = cv2.waitKey(1) & 0xFF
+        # cv2.imshow("Frame", frame)
+        # key = cv2.waitKey(1) & 0xFF
 
-        # if the `q` key was pressed, break from the loop
-        if key == ord("q"):
-            break
+        # # if the `q` key was pressed, break from the loop
+        # if key == ord("q"):
+        #     break
 
     # do a bit of cleanup
-    cv2.destroyAllWindows()
+    # cv2.destroyAllWindows()
     vs.stop()
 
 

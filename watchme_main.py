@@ -5,7 +5,7 @@ from time import sleep
 
 def randoutput():
     return json.dumps({
-        'blink': random.getrandbits(1),
+        'closed': random.getrandbits(1),
         'track': [
             random.randint(0, 1920),
             random.randint(0, 1080)
