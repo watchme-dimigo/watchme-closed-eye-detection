@@ -21,8 +21,11 @@ def get_shape(predictor, gray, rect):
     shape = predictor(gray, rect)
     return face_utils.shape_to_np(shape)
 
-def get_ear(shape, start, end):
-    return eye_aspect_ratio(shape[start:end])
+def get_eye_shape(shape, start, end):
+    return shape[start:end]
+
+def get_ear(eye_shape):
+    return eye_aspect_ratio(eye_shape)
 
 def eye_closed(left, right, thresh):
     ear = (left + right) / 2.0

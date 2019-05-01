@@ -5,9 +5,10 @@ import cv2
 from imutils.video import VideoStream
 import imutils
 import dlib
-from core.eye_closed import face_utils, eye_closed, get_shape, get_ear
+from core.eye_closed import *
+from core.utils import *
 
-def main():
+def main(debug=False):
     EYE_AR_THRESH = 0.15
 
     # print("[INFO] loading facial landmark predictor...")
@@ -22,7 +23,9 @@ def main():
     vs = VideoStream(src=0, resolution=(1280, 960)).start()
     fileStream = False
 
-    time.sleep(1.0)
+    if debug:
+        cv2.namedWindow('Frame', cv2.WINDOW_NORMAL)
+        cv2.resizeWindow('Frame', 1000, 800)
 
     prev_face = None
     prev_idx = 0
@@ -55,20 +58,40 @@ def main():
 
             shape = get_shape(predictor, gray, rect)
 
-            leftEAR = get_ear(shape, lStart, lEnd)
-            rightEAR = get_ear(shape, rStart, rEnd)
+            left_eye_shape = get_eye_shape(shape, lStart, lEnd)
+            leftEAR = get_ear(left_eye_shape)
+
+            right_eye_shape = get_eye_shape(shape, rStart, rEnd)
+            rightEAR = get_ear(right_eye_shape)
+
+            if debug:
+                draw_dlib_rect(frame, rect)
+                draw_contours(frame, left_eye_shape)
+                draw_contours(frame, right_eye_shape)
+
 
             print(json.dumps({
                 'closed': eye_closed(leftEAR, rightEAR, EYE_AR_THRESH)
             }))
+
         else:
             print(json.dumps({
                 'closed': -1
             }))
             
-        sys.stdout.flush()        
+        sys.stdout.flush()
+        if debug:
+            cv2.imshow("Frame", frame)  
+            key = cv2.waitKey(1) & 0xFF
 
+            # if the `q` key was pressed, break from the loop
+            if key == ord("q"):
+                break    
+
+    cv2.destroyAllWindows()
     vs.stop()
 
 if __name__ == '__main__':
-    main()
+    # turn debug mode off (default) in production or test for C# parent
+    # main()  
+    main(debug=True)

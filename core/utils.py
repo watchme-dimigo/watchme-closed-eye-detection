@@ -14,3 +14,7 @@ def draw_dlib_rect(frame, rect):
 def draw_ndarray_rect(frame, rect):
     # x, y, w, h 형태의 numpy.ndarray을 frame에 cv2 rectangle로 표시
     return _draw_rect(frame, rect)
+
+def draw_contours(frame, eye_shape):
+    eye_hull = cv2.convexHull(eye_shape)
+    cv2.drawContours(frame, [eye_hull], -1, (0, 255, 0), 1)
