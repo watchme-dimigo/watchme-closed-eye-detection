@@ -32,6 +32,8 @@ def get_ear(eye_shape):
     return eye_aspect_ratio(eye_shape)
 
 
-def eye_closed(left, right, thresh):
+def eye_closed(left, right, thresh, debug=False):
     ear = (left + right) / 2.0
+    if debug:
+      print('[*] EAR:', ear)
     return int(ear < thresh)

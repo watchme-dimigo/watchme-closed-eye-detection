@@ -1,5 +1,4 @@
 import sys
-import time
 import json
 import cv2
 from imutils.video import VideoStream
@@ -10,7 +9,7 @@ from core.utils import *
 
 
 def main(debug=False):
-    EYE_AR_THRESH = 0.15
+    EYE_AR_THRESH = 0.18
 
     detector = dlib.get_frontal_face_detector()
     predictor = dlib.shape_predictor('shape_predictor_68_face_landmarks.dat')
@@ -34,7 +33,7 @@ def main(debug=False):
             break
 
         frame = vs.read()
-        frame = imutils.resize(frame, width=450)
+        frame = imutils.resize(frame, width=960)
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
         try:
@@ -48,11 +47,11 @@ def main(debug=False):
 
         if not rect:
             if prev_face is not None and prev_idx < PREV_MAX:
-                rect = prev_face
+                rect = prev_face  # 결과가 없는 경우 적절히 오래된(PREV_MAX) 이전 결과를 사용
                 prev_idx += 1
 
-        if rect:  # face found
-            prev_face = rect
+        if rect:  # 얼굴을 인식한 경우(prev_face를 사용하는 경우 포함)
+            prev_face = rect  # 저장
 
             shape = get_shape(predictor, gray, rect)
 
@@ -62,13 +61,13 @@ def main(debug=False):
             right_eye_shape = get_eye_shape(shape, rStart, rEnd)
             rightEAR = get_ear(right_eye_shape)
 
-            if debug:
+            if debug:  # 디버그 모드에서 발견된 결과 표시
                 draw_dlib_rect(frame, rect)
                 draw_contours(frame, left_eye_shape)
                 draw_contours(frame, right_eye_shape)
 
             print(json.dumps({
-                'closed': eye_closed(leftEAR, rightEAR, EYE_AR_THRESH)
+                'closed': eye_closed(leftEAR, rightEAR, EYE_AR_THRESH, debug)
             }))
 
         else:
@@ -77,11 +76,12 @@ def main(debug=False):
             }))
 
         sys.stdout.flush()
-        if debug:
-            cv2.imshow("Frame", frame)
-            key = cv2.waitKey(1) & 0xFF
 
-            # if the `q` key was pressed, break from the loop
+        if debug:  # 디버그 모드
+            cv2.imshow("Frame", frame)  # 프레임 표시
+
+            # q 키를 눌러 종료
+            key = cv2.waitKey(1) & 0xFF
             if key == ord("q"):
                 break
 

@@ -21,5 +21,6 @@ def draw_ndarray_rect(frame, rect):
 
 
 def draw_contours(frame, eye_shape):
+    # eye_shape을 frame에 cv2의 contour로 표시
     eye_hull = cv2.convexHull(eye_shape)
     cv2.drawContours(frame, [eye_hull], -1, (0, 255, 0), 1)
