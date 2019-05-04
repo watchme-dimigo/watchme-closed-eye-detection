@@ -1,5 +1,6 @@
 import sys
 import json
+from configparser import ConfigParser
 import cv2
 from imutils.video import VideoStream
 import imutils
@@ -9,7 +10,13 @@ from core.utils import *
 
 
 def main(debug=False):
-    EYE_AR_THRESH = 0.18
+    # 커스터마이제이션 설정이 있는 파일을 열어 ear_thresh 값(eye aspect ratio에 대한 임계값)을 가져옴
+    config = ConfigParser()
+    config.read('./settings.ini')
+    ear_thresh = config['core'].getfloat('ear_thresh')
+    
+    if debug:
+      print('[*] EAR_THRESH:', ear_thresh)
 
     detector = dlib.get_frontal_face_detector()
     predictor = dlib.shape_predictor('shape_predictor_68_face_landmarks.dat')
@@ -67,7 +74,7 @@ def main(debug=False):
                 draw_contours(frame, right_eye_shape)
 
             print(json.dumps({
-                'closed': eye_closed(leftEAR, rightEAR, EYE_AR_THRESH, debug)
+                'closed': eye_closed(leftEAR, rightEAR, ear_thresh, debug)
             }))
 
         else:
