@@ -35,5 +35,5 @@ def get_ear(eye_shape):
 def eye_closed(left, right, thresh, debug=False):
     ear = (left + right) / 2.0
     if debug:
-      print('[*] EAR:', ear)
+        print('[*] EAR:', ear)
     return int(ear < thresh)
