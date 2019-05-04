@@ -2,13 +2,20 @@ from configparser import ConfigParser
 import cv2
 
 def load_ear_thresh(debug):
+    config = ConfigParser()
+    config.read('./config.ini')
+
     try:
-        config = ConfigParser()
-        config.read('./settings.ini')
         ear_thresh = config['core'].getfloat('ear_thresh')
     except:
-        print('[!] Failed to open file settings.ini; Using default value 0.18')
         ear_thresh = 0.18
+        print('[!] Failed to open file config.ini; Using default value', ear_thresh)
+
+        config.add_section('core')
+        config.set('core', 'ear_thresh', str(ear_thresh))
+
+        with open('./config.ini', 'w') as config_file:
+            config.write(config_file)
 
     if debug:
         print('[*] EAR_THRESH:', ear_thresh)
