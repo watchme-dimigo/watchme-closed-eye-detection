@@ -1,5 +1,12 @@
 # WatchMe Backend
 
+## implementation points
+
+### closed eye detection
+1. 가장 커다란 얼굴을 가져옴: 정확도보다 메인이 되는 사람이 우선
+2. 일정 프레임 동안 최근 인식 결과를 기억
+3. 자동으로 사용자에 맞게 EAR 임계값을 조정
+
 ## main
 현재 눈 감김 여부를 연속적으로 출력
 
@@ -17,7 +24,7 @@
 
 > 어서 일어나. 코딩해야지
 
-`osascript`로 알람 표시
+`osascript`로 알람 표시(Mac OS X)
 
 ## (auto) customize
 
