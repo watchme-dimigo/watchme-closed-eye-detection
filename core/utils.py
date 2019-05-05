@@ -3,6 +3,7 @@ import cv2
 import numpy as np
 from PIL import ImageFont, ImageDraw, Image
 
+
 def save_ear_thresh(ear_thresh):
     config = ConfigParser()
     config.read('./config.ini')
@@ -13,6 +14,7 @@ def save_ear_thresh(ear_thresh):
 
     with open('./config.ini', 'w') as config_file:
         config.write(config_file)
+
 
 def load_ear_thresh(debug):
     config = ConfigParser()
@@ -33,6 +35,7 @@ def load_ear_thresh(debug):
 
     return ear_thresh
 
+
 def _bgr_by_name(color):
     try:
         return {
@@ -43,7 +46,8 @@ def _bgr_by_name(color):
         }[color]
     except KeyError:
         return color
-    
+
+
 def put_korean(frame, text, org, fontSacle=32, color=(255, 255, 255, 0)):
     """한글 출력"""
     font = ImageFont.truetype('./assets/notosans_regular.otf', fontSacle)
@@ -57,6 +61,7 @@ def put_korean(frame, text, org, fontSacle=32, color=(255, 255, 255, 0)):
     return frame
 
 # frame draws: 실제 촬영된 영상 확인 시 테스트용으로 사용함; 실제 프로덕션 코드에는 없음
+
 
 def _draw_rect(frame, rect):
     (x, y, w, h) = rect

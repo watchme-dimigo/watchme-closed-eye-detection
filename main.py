@@ -39,8 +39,14 @@ def main(debug=False):
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
         try:
-            # TODO: 가장 커다란 면적의 결과를 가져오도록 고쳐야 함
-            rect = detector(gray, 0)[0]
+            rects = detector(gray, 0)
+            rects = sorted(
+                rects,
+                key=lambda rect: rect.width() * rect.height(),
+                reverse=True)
+            # 면적(인식된 범위)이 가장 커다란 사각형(얼굴)을 가져옴
+            rect = rects[0]
+
         except IndexError:
             rect = None
 
