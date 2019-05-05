@@ -94,7 +94,7 @@ def main():
                     frame = put_korean(frame, '[측정 완료] 평균 EAR: %s' % ear_thresh, (180, 90), fontSacle=30, color='GREEN') 
                     save_ear_thresh(ear_thresh)
                     cv2.imshow("Frame", frame)  # 프레임 표시
-                    key = cv2.waitKey(3000) & 0xFF
+                    key = cv2.waitKey(5000) & 0xFF
                     cv2.destroyAllWindows()
                     vs.stop()
                     exit(0)
