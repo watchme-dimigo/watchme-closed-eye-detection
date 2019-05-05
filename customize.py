@@ -1,3 +1,4 @@
+import time
 import cv2
 from imutils.video import VideoStream
 import imutils
@@ -72,13 +73,16 @@ def main():
             frame = put_korean(frame, '얼굴이 인식되었습니다.', (frame_w / 2 - 100, 10), color='GREEN')
 
             ear = round((leftEAR + rightEAR) / 2.0, 3)
-            frame = put_korean(frame, '현재 EAR: %s' % ear, (frame_w / 2 - 100, 50), fontSacle=30, color='WHITE')
+            frame = put_korean(frame, '현재 EAR: %s' % ear, (frame_w / 2 - 100, 52), fontSacle=30, color='WHITE')
         
             if not in_custom:
-                detect_iters += 1
+                detect_iters += 1                   
                 if detect_iters > 50: # 처음 얼굴 인식 후 일정 프레임 동안 안정적으로 인식됨
+                    frame = put_korean(frame, '눈을 감아 주세요.', (frame_w / 2 - 100, 90), fontSacle=30, color='RED') 
                     audio.play()
                     in_custom = True
+                elif detect_iters > 10:
+                    frame = put_korean(frame, '잠시 뒤 삐 소리가 들리면 다시 소리가 날 때까지 눈을 감아 주세요.', (180, 90), fontSacle=20, color='WHITE')
             
             if in_custom:
                 closed_iters += 1
@@ -87,9 +91,15 @@ def main():
                     print(closed_ears)
                     ear_thresh = round(sum(closed_ears) / 100, 3)
                     print(ear_thresh)
+                    frame = put_korean(frame, '[측정 완료] 평균 EAR: %s' % ear_thresh, (180, 90), fontSacle=30, color='GREEN') 
                     save_ear_thresh(ear_thresh)
-                    exit()
+                    cv2.imshow("Frame", frame)  # 프레임 표시
+                    key = cv2.waitKey(3000) & 0xFF
+                    cv2.destroyAllWindows()
+                    vs.stop()
+                    exit(0)
                 else:
+                    frame = put_korean(frame, '눈을 감아 주세요.', (frame_w / 2 - 100, 90), fontSacle=30, color='RED') 
                     closed_ears.append(ear)
 
         else: # 얼굴이 인식되지 않음
@@ -105,9 +115,8 @@ def main():
         if key == ord("q"):
             break
 
-    cv2.destroyAllWindows()
-    vs.stop()
-
+    # cv2.destroyAllWindows()
+    # vs.stop()
 
 if __name__ == '__main__':
     main()
